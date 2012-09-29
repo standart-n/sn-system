@@ -1,0 +1,28 @@
+{
+	"site":
+	{
+		"queue":
+		[
+			"settings",
+			"users",
+			"work",
+			"text",
+			"orders",
+			"groups",
+			"article",
+			"price",
+			"design"
+		]	
+	},
+	"ajax":
+	{
+		"queue":
+		[
+			"settings",
+			"users",
+			"ajax_orders",
+			"ajax_price",
+			"ajax_users"
+		]		
+	}
+}

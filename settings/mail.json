@@ -1,0 +1,8 @@
+{
+	"box":"shop-maestro18@yandex.ru",
+	"host":"ssl://smtp.yandex.ru",
+	"port":"465",
+	"login":"",
+	"password":"",
+	"lib":"/usr/share/php/Mail.php"
+}
