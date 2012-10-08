@@ -1,6 +1,12 @@
-<? class fn_bots {
+<? class plBots extends sn {
+	
+public static $isBot;
 
-function isBot(&$botname=''){
+function __construct() {
+	self::$isBot=self::checkBots();
+}
+
+function checkBots(&$botname=''){
 	if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
 	if ($_SERVER['HTTP_USER_AGENT']=="") return false;
     $bots = array(

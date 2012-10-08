@@ -7,7 +7,6 @@ function engine() {
 	foreach (array("configure","plugins","base","display") as $key) { 
 		$this->$key($q); 
 	}
-	return $q;
 }
 
 function configure(&$q) {

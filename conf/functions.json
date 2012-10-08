@@ -1,0 +1,6 @@
+{	
+		"date and time":["fnDate"],
+		"mail":["fnMail"],
+		"query to base":["fnQuery"],
+		"models":["fnModels"]	
+}

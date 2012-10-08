@@ -1,4 +1,9 @@
-<?php class pl_getComponents {
+<?php class plGetComponents {
+
+function __construct() {
+
+	
+}
 
 function engine(&$q) { $er=false;
 	if (isset($q->components)) {

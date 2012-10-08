@@ -1,0 +1,7 @@
+{	
+		"ajax":"plAjax",
+		"fdb":"plBaseFdb",
+		"fn":"plGetFunctions",
+		"bots":"plBots",
+		"project":"plProject"
+}

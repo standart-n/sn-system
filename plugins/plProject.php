@@ -1,4 +1,7 @@
-<?php class pl_project {
+<?php class plProject extends sn {
+
+function __construct() {
+}
 
 function engine(&$q) {
 	if (isset($q->controlsQueue)) {
@@ -22,7 +25,7 @@ function engine(&$q) {
 								$q->$key->engine($q);
 							}
 						}
-					}			
+					}
 				}
 				$q->html=json_encode($q->json);
 			}
