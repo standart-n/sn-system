@@ -13,7 +13,7 @@ function __construct() {
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		self::$referer=$_SERVER["HTTP_REFERER"];
 	}
-	eval("function isAjax(){return plAjax::\$ajax;}");
+	eval('function isAjax(){return plAjax::$ajax;}');
 }
 
 } ?>
