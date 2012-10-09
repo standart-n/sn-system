@@ -1,6 +1,8 @@
 <?php class plProject extends sn {
 
 function __construct() {
+	echo isBot();
+	
 }
 
 function engine(&$q) {

@@ -2,6 +2,6 @@
 		"ajax":"plAjax",
 		"fdb":"plBaseFdb",
 		"fn":"plGetFunctions",
-		"bots":"plBots",
+		"bots":"plCheckBots",
 		"project":"plProject"
 }
