@@ -3,5 +3,6 @@
 		"fdb":"plBaseFdb",
 		"fn":"plGetFunctions",
 		"bots":"plCheckBots",
+		"parser":"plParser",
 		"project":"plProject"
 }

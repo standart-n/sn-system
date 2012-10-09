@@ -41,8 +41,12 @@ function plugins() {
 	}
 }
 
-function cl($m) {
-	$this->$m=new $m();	
+function cl($cl,$name=null) {
+	if ($name) {
+		$this->$name=new $cl();	
+	} else {
+		$this->$cl=new $cl();	
+	}
 }
 
 } ?>
