@@ -1,37 +1,9 @@
 <?php class plProject extends sn {
 
 function __construct() {
-	echo isBot();
-	
-}
-
-function engine(&$q) {
-	if (isset($q->controlsQueue)) {
-		if (!$q->ajax) {
-			if (isset($q->controlsQueue->site->queue)) {
-				foreach($q->controlsQueue->site->queue as $key) {
-					if (isset($q->$key)) {
-						if (method_exists($q->$key,"engine")) {
-							$q->$key->engine($q);
-						}
-					}
-				}
-			}
-		}
-		if ($q->ajax) {
-			if (!$q->fn_bots->isBot()) {
-				if (isset($q->controlsQueue->ajax->queue)) {
-					foreach($q->controlsQueue->ajax->queue as $key) {
-						if (isset($q->$key)) {
-							if (method_exists($q->$key,"engine")) {
-								$q->$key->engine($q);
-							}
-						}
-					}
-				}
-				$q->html=json_encode($q->json);
-			}
-		}
+	if (file_exists(project."/controls/main.php")) {
+		require_once(project."/controls/main.php");
+		sn::cl("main");
 	}
 }
 
