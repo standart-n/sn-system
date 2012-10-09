@@ -3,7 +3,7 @@
 function __construct() {
 	if (file_exists(project."/controls/start.php")) {
 		require_once(project."/controls/start.php");
-		sn::cl("main");
+		sn::cl("start");
 	}
 }
 
