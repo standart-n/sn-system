@@ -3,16 +3,21 @@
 public static $conf;
 
 function sn() {
-	foreach (array("configure","plugins") as $key) {
+	foreach (array("settings","configure","plugins") as $key) {
 		self::$key();
 	}
 }
 
+function settings() {
+	require_once(system."/core/def.php");		
+}
+
 function configure() { $f_user=""; $json_user="";
+	self::$conf=new def;
 	chdir(system."/conf");
 	$dir=opendir(".");
 	while ($d=readdir($dir)) { unset($f_user); unset($json_user);
-        if (is_file($d)) { if (preg_match("/[0-9a-z]+\.json/i",$d)) {
+		if (is_file($d)) { if (preg_match("/[0-9a-z]+\.json/i",$d)) {
 			$nm=str_replace('.json','',$d);
 			$f=file_get_contents($d);
 			$json=json_decode($f);
@@ -25,7 +30,7 @@ function configure() { $f_user=""; $json_user="";
 			}
 			self::$conf->$nm=$json;
 		} }
- 	}
+	}
 	closedir($dir); chdir("../..");
 }
 
