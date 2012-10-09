@@ -1,8 +1,8 @@
 <?php class plProject extends sn {
 
 function __construct() {
-	if (file_exists(project."/controls/main.php")) {
-		require_once(project."/controls/main.php");
+	if (file_exists(project."/controls/start.php")) {
+		require_once(project."/controls/start.php");
 		sn::cl("main");
 	}
 }
