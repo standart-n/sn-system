@@ -27,40 +27,40 @@ function delete(&$a,&$r="") { $ms=array();
 
 
 function fbUpdate($fb,&$r="") { $rt=false;
-	$query=@ibase_query(plDataBase::$cn->fb["cn"]->$fb["it"],$fb["sql"]);
+	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->fb["cn"]->db);
+		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
+		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
 	} }
 	$r=$rt;
 	return $rt;
 }
 
 function fbInsert($fb,&$r="") { $rt=false;
-	$query=@ibase_query(plDataBase::$cn->fb["cn"]->$fb["it"],$fb["sql"]);
+	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->fb["cn"]->db);
+		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
+		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
 	} }
 	$r=$rt;
 	return $rt;
 }
 
 function fbDelete($fb,&$r="") { $rt=false;
-	$query=@ibase_query(plDataBase::$cn->fb["cn"]->$fb["it"],$fb["sql"]);
+	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->fb["cn"]->db);
+		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
+		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
 	} }
 	$r=$rt;
 	return $rt;
 }
 
 function fbSelect($fb,&$r="") { $rt=false; $ms=array();
-	$query=@ibase_query(plDataBase::$cn->fb["cn"]->$fb["it"],$fb["sql"]);
+	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { $rt=true;
 		if ($fb["get"]=="object") {
 			while ($line=ibase_fetch_object($query)) {
@@ -88,7 +88,7 @@ function fbSelect($fb,&$r="") { $rt=false; $ms=array();
 }
 
 function execQuery($method,$ms,&$r="") { $a=array();
-	if (in_array($method,array("select","insert","update","delete"))) {
+	if (in_array($method,array("select","insert","update","delete"))) {		
 		$a=self::getConnection($ms);
 		if (isset($a["type"])) { $type=$a["type"]; }
 		if (isset($a["cn"])) { $connnect=$a["cn"]; }
@@ -146,16 +146,16 @@ function getConnection($ms){ $a=array();
 	if (isset($ms["connection"])) {
 		if ($ms["connection"]!="") { 
 			$ms_cn=$ms["connection"];
-			if (isset(plDataBase::$cn->fb["cn"])) {
-				if (isset(plDataBase::$cn->fb["cn"]->db)) {
-					if (isset(plDataBase::$cn->fb["cn"]->type)) {
+			if (isset(plDataBase::$cn->$fb["cn"])) {
+				if (isset(plDataBase::$cn->$fb["cn"]->db)) {
+					if (isset(plDataBase::$cn->$fb["cn"]->type)) {
 						
-						if (plDataBase::$cn->fb["cn"]->type=="firebird") {
+						if (plDataBase::$cn->$fb["cn"]->type=="firebird") {
 							if (isset($ms["transaction"])) {
 								$ms_it=$ms["transaction"];
-								if (isset(plDataBase::$cn->fb["cn"]->$ms_it)) {
+								if (isset(plDataBase::$cn->$fb["cn"]->$ms_it)) {
 									$type="firebird";
-									$cn=$ms_cn;
+									$connect=$ms_cn;
 									$it=$ms_it;
 								}
 							}
@@ -164,7 +164,7 @@ function getConnection($ms){ $a=array();
 									if (isset(sn::$conf->database->connections->$ms_cn->transactions)) {
 										foreach (sn::$conf->database->connections->$ms_cn->transactions as $it_alias=>$it_data) {
 											if (!isset($it)) {
-												if (isset(plDataBase::$cn->fb["cn"]->$it_alias)) {
+												if (isset(plDataBase::$cn->$fb["cn"]->$it_alias)) {
 													$type="firebird";
 													$cn=$ms_cn;
 													$it=$it_alias;
@@ -181,19 +181,19 @@ function getConnection($ms){ $a=array();
 			}						
 		}
 	}
-	if (!isset($cn)) {
+	if (!isset($connect)) {
 		if (isset(sn::$conf->database->default)) {
 			if (isset(sn::$conf->database->default->connection)) {
 				$de_cn=sn::$conf->database->default->connection;
-				if (isset($q->$de_cn)) {
-					if (isset($q->$de_cn->db)) {
-						if (isset($q->$de_cn->type)) {
-							if ($q->$de_cn->type=="firebird") {
+				if (isset(plDataBase::$cn->$de_cn)) {
+					if (isset(plDataBase::$cn->$de_cn->db)) {
+						if (isset(plDataBase::$cn->$de_cn->type)) {
+							if (plDataBase::$cn->$de_cn->type=="firebird") {
 								if (isset(sn::$conf->database->default->transaction)) {
 									$de_it=sn::$conf->database->default->transaction;
-									if (isset($q->$de_cn->$de_it)) {
+									if (isset(plDataBase::$cn->$de_cn->$de_it)) {
 										$type="firebird";
-										$cn=$de_cn;
+										$connect=$de_cn;
 										$it=$de_it;
 									}
 								}
@@ -202,9 +202,9 @@ function getConnection($ms){ $a=array();
 										if (isset(sn::$conf->database->connections->$de_cn->transactions)) {
 											foreach (sn::$conf->database->connections->$de_cn->transactions as $it_alias=>$it_data) {
 												if (!isset($it)) {
-													if (isset($q->$de_cn->$it_alias)) {
+													if (isset(plDataBase::$cn->$de_cn->$it_alias)) {
 														$type="firebird";
-														$cn=$de_cn;
+														$connect=$de_cn;
 														$it=$it_alias;
 													}
 												}
@@ -220,7 +220,7 @@ function getConnection($ms){ $a=array();
 		}		
 	}
 	if (isset($type)) { $a["type"]=$type; }
-	if (isset($cn)) { $a["cn"]=$cn; }
+	if (isset($connect)) { $a["cn"]=$connect; }
 	if (isset($it)) { $a["it"]=$it; }
 	return $a;
 }
