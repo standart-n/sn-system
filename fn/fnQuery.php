@@ -30,8 +30,7 @@ function fbUpdate($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
+		plDataBase::commitIt($fb);
 	} }
 	$r=$rt;
 	return $rt;
@@ -41,8 +40,7 @@ function fbInsert($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
+		plDataBase::commitIt($fb);
 	} }
 	$r=$rt;
 	return $rt;
@@ -52,8 +50,7 @@ function fbDelete($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
-		//ibase_commit(plDataBase::$cn->$fb["cn"]->$fb["it"]);
-		//plDataBase::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
+		plDataBase::commitIt($fb);
 	} }
 	$r=$rt;
 	return $rt;
@@ -83,9 +80,90 @@ function fbSelect($fb,&$r="") { $rt=false; $ms=array();
 			}
 		}
 	} }
-	if (sizeof($ms)==1) { $r=$ms[0]; } else { $r=$ms; }
+	if ($fb["clt"]=="auto") {
+		if (sizeof($ms)==1) { $r=$ms[0]; } else { $r=$ms; }
+	}
+	if ($fb["clt"]=="array") {
+		$r=$ms;
+	}
+	if ($fb["clt"]=="row") {
+		$r=$ms[0];
+	}
 	return $rt;
 }
+
+
+
+
+
+
+
+function mysqlUpdate($a,&$r="") { $rt=false;
+	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
+	if (isset($query)) { if ($query) { 
+		$rt=true;
+	} }
+	$r=$rt;
+	return $rt;
+}
+
+function mysqlInsert($a,&$r="") { $rt=false;
+	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
+	if (isset($query)) { if ($query) { 
+		$rt=true;
+	} }
+	$r=$rt;
+	return $rt;
+}
+
+function mysqlDelete($a,&$r="") { $rt=false;
+	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
+	if (isset($query)) { if ($query) { 
+		$rt=true;
+	} }
+	$r=$rt;
+	return $rt;
+}
+
+function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
+	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
+	if (isset($query)) { if ($query) { $rt=true;
+		if ($a["get"]=="object") {
+			while ($line=mysql_fetch_object($query)) {
+				if (isset($line)) {
+					if (is_object($line)) {
+						$ms[]=$line;
+						if (sizeof($ms)>=$a["limit"]) break;
+					}
+				}
+			}
+		}
+		if ($a["get"]=="array") {
+			while ($line=mysql_fetch_array($query)) {
+				if (isset($line)) {
+					if (is_array($line)) {
+						$ms[]=$line;
+						if (sizeof($ms)>=$a["limit"]) break;
+					}
+				}
+			}
+		}
+	} }
+	if ($a["clt"]=="auto") {
+		if (sizeof($ms)==1) { $r=$ms[0]; } else { $r=$ms; }
+	}
+	if ($a["clt"]=="array") {
+		$r=$ms;
+	}
+	if ($a["clt"]=="row") {
+		$r=$ms[0];
+	}
+	return $rt;
+}
+
+
+
+
 
 function execQuery($method,$ms,&$r="") { $a=array();
 	if (in_array($method,array("select","insert","update","delete"))) {		
@@ -110,6 +188,25 @@ function execQuery($method,$ms,&$r="") { $a=array();
 				$get="object";
 			}
 		}
+
+		if (isset($ms["collection"])) {
+			if (in_array($ms["collection"],array("auto","array","row"))) {
+				$clt=$ms["collection"];
+			}
+		}
+		if (!isset($clt)) { 
+			if (isset($q->database)) {
+				if (isset($q->database->settings)) {
+					if (isset($q->database->settings->collection_of_data_return)) {
+						$clt=$q->database->settings->collection_of_data_return;
+					}
+				}
+			}
+		}
+		if (!isset($clt)) {
+			$clt="auto";
+		}
+
 		if (isset($ms["limit"])) {
 			$limit=intval($ms["limit"]);
 		}
@@ -121,12 +218,14 @@ function execQuery($method,$ms,&$r="") { $a=array();
 			}
 		}
 		if ((isset($connnect)) && (isset($type)) && (isset($sql))) {
+
+
 			if ($type=="firebird") {
 				if (isset($it)) {
 					if (isset(plDataBase::$cn->$connnect)) {
 						if ((isset(plDataBase::$cn->$connnect->$it)) && (isset(plDataBase::$cn->$connnect->db))) {
 							switch ($method) {
-								case "select": $rt=self::fbSelect(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql,"get"=>$get,"limit"=>$limit),$r); break;
+								case "select": $rt=self::fbSelect(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql,"get"=>$get,"clt"=>$clt,"limit"=>$limit),$r); break;
 								case "update": $rt=self::fbUpdate(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
 								case "insert": $rt=self::fbInsert(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
 								case "delete": $rt=self::fbSelect(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
@@ -134,7 +233,23 @@ function execQuery($method,$ms,&$r="") { $a=array();
 						}
 					}
 				}
+			}
+
+
+			if ($type=="mysql") {
+				if (isset(plDataBase::$cn->$connnect)) {
+					if (isset(plDataBase::$cn->$connnect->db)) {
+						switch ($method) {
+							case "select": $rt=self::mysqlSelect(array("cn"=>$connnect,"sql"=>$sql,"get"=>$get,"clt"=>$clt,"limit"=>$limit),$r); break;
+							case "update": $rt=self::mysqlUpdate(array("cn"=>$connnect,"sql"=>$sql),$r); break;
+							case "insert": $rt=self::mysqlInsert(array("cn"=>$connnect,"sql"=>$sql),$r); break;
+							case "delete": $rt=self::mysqlSelect(array("cn"=>$connnect,"sql"=>$sql),$r); break;
+						}
+					}
+				}
 			}										
+
+
 		}
 	}
 	if (!isset($rt)) { $rt=false; }
@@ -166,7 +281,7 @@ function getConnection($ms){ $a=array();
 											if (!isset($it)) {
 												if (isset(plDataBase::$cn->$fb["cn"]->$it_alias)) {
 													$type="firebird";
-													$cn=$ms_cn;
+													$connect=$ms_cn;
 													$it=$it_alias;
 												}
 											}
@@ -175,6 +290,15 @@ function getConnection($ms){ $a=array();
 								}
 							}
 						}
+
+
+						if (plDataBase::$cn->$fb["cn"]->type=="mysql") {
+							if (isset(sn::$conf->database->connections->$ms_cn)) {
+								$type="mysql";
+								$connect=$ms_cn;
+							}
+						}
+
 					
 					}
 				}
@@ -188,6 +312,8 @@ function getConnection($ms){ $a=array();
 				if (isset(plDataBase::$cn->$de_cn)) {
 					if (isset(plDataBase::$cn->$de_cn->db)) {
 						if (isset(plDataBase::$cn->$de_cn->type)) {
+							
+							
 							if (plDataBase::$cn->$de_cn->type=="firebird") {
 								if (isset(sn::$conf->database->default->transaction)) {
 									$de_it=sn::$conf->database->default->transaction;
@@ -212,7 +338,17 @@ function getConnection($ms){ $a=array();
 										}
 									}
 								}
-							}					
+							}
+
+
+							if (plDataBase::$cn->$de_cn->type=="mysql") {
+								if (isset(sn::$conf->database->connections->$de_cn)) {
+									$type="mysql";
+									$connect=$de_cn;
+								}
+							}
+							
+												
 						}
 					}					
 				}

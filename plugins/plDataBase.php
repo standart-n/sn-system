@@ -45,4 +45,10 @@ function __construct() {
 	}
 }
 
+
+function commitIt($fb) {
+	ibase_commit(self::$cn->$fb["cn"]->$fb["it"]);
+	self::$cn->$fb["cn"]->$fb["it"]=ibase_trans(IBASE_WRITE+IBASE_COMMITTED+IBASE_REC_VERSION+IBASE_NOWAIT,plDataBase::$cn->$fb["cn"]->db);
+}
+
 } ?>
