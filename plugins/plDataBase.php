@@ -1,4 +1,4 @@
-<?php class plBaseFdb extends sn {
+<?php class plDataBase extends sn {
 	
 public static $cn;
 
@@ -24,6 +24,21 @@ function __construct() {
 							}
 						}
 					}
+					if (trim(strtolower($ms->type))=="mysql") { 
+						$ms->type="mysql";
+						self::$cn->$alias=new def;
+						self::$cn->$alias->type=$ms->type;
+						if (isset($ms->charset)) { self::$cn->$alias->charset=$ms->charset; }
+						if ((isset($ms->path)) && (isset($ms->login)) && (isset($ms->password)) && (isset($ms->dbname))) {
+							if (($ms->path!="") && ($ms->login!="") && ($ms->password!="") && ($ms->dbname!="")) {
+								self::$cn->$alias->db=@mysql_pconnect($ms->path,$ms->login,$ms->password);
+								if (isset(self::$cn->$alias->db)) {
+									mysql_select_db($ms->dbname);
+									mysql_query('SET NAMES UTF8',self::$cn->$alias->db);
+								}
+							}
+						}
+					}					
 				}
 			}
 		}

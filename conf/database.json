@@ -2,6 +2,7 @@
 	"settings":
 	{
 		"type_of_data_return":"object",
+		"collection_of_data_return":"auto",
 		"limit_of_rows":1000
 	},
 	"default":
