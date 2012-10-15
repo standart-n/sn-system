@@ -8,7 +8,7 @@ function __construct() {
 		if (isset($data->connections)) {
 			foreach ($data->connections as $alias=>$ms){
 				if (isset($ms->type)) {
-					if (($ms->type=="firebird") || ($ms->type=="fb")) { 
+					if ((trim(strtolower($ms->type))=="firebird") || (trim(strtolower($ms->type))=="fb")) { 
 						$ms->type="firebird";
 						self::$cn->$alias=new def;
 						self::$cn->$alias->type=$ms->type;
