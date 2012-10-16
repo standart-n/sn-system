@@ -2,9 +2,7 @@
 
 function __construct() {
 	if (!isAjax()) {
-		if (file_exists(project."/index.html")) {
-			load(file_get_contents(project."/index.html"));
-		}
+		load("index.html");
 		if (file_exists(project."/controls/start.php")) {
 			require_once(project."/controls/start.php");
 			sn::cl("start");

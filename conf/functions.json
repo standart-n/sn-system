@@ -2,5 +2,6 @@
 		"date and time":["fnDate"],
 		"mail":["fnMail"],
 		"query to base":["fnQuery"],
+		"parser":["fnParser"],
 		"models":["fnModels"]	
 }

@@ -1,7 +1,18 @@
 <? class fnQuery extends sn {
 
 function __construct() {
-	eval(self::query());
+	eval('function query($a,&$r="") { return fnQuery::query($a,$r); }');
+}
+
+function query($a,&$r="") { $ms=array();
+	if (is_array($a)) { $ms=$a; $sql=$a["sql"]; } else { $ms["sql"]=$a; $sql=$a; }
+	switch (strtolower(substr($sql,0,6))) {
+		case "select": return self::execQuery("select",$ms,$r); break;
+		case "update": return self::execQuery("update",$ms,$r); break;
+		case "insert": return self::execQuery("insert",$ms,$r); break;
+		case "delete": return self::execQuery("delete",$ms,$r); break;
+		default: return false;
+	}
 }
 
 function select($a,&$r="") { $ms=array();
@@ -160,9 +171,6 @@ function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
 	}
 	return $rt;
 }
-
-
-
 
 
 function execQuery($method,$ms,&$r="") { $a=array();
@@ -359,19 +367,6 @@ function getConnection($ms){ $a=array();
 	if (isset($connect)) { $a["cn"]=$connect; }
 	if (isset($it)) { $a["it"]=$it; }
 	return $a;
-}
-
-function query() { $s="";
-	$s.='function query($a,&$r=""){ $ms=array();';
-	$s.='if (is_array($a)) { $ms=$a; $sql=$a["sql"]; } else { $ms["sql"]=$a; $sql=$a; }';
-	$s.='switch (strtolower(substr($sql,0,6))){';
-	$s.='case "select": return fnQuery::execQuery("select",$ms,$r); break;';
-	$s.='case "update": return fnQuery::execQuery("update",$ms,$r); break;';
-	$s.='case "insert": return fnQuery::execQuery("insert",$ms,$r); break;';
-	$s.='case "delete": return fnQuery::execQuery("delete",$ms,$r); break;';
-	$s.='}';
-	$s.='}';
-	return $s;
 }
 
 } ?>
