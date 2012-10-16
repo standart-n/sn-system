@@ -19,14 +19,12 @@ function configure() { $f_user=""; $json_user="";
 	while ($d=readdir($dir)) { unset($f_user); unset($json_user);
 		if (is_file($d)) { if (preg_match("/[0-9a-z]+\.json/i",$d)) {
 			$nm=str_replace('.json','',$d);
-			$f=file_get_contents($d);
-			$json=json_decode($f);
 			if (file_exists("../../".project."/conf/".$d)) {
-				$f_user=file_get_contents("../../".project."/conf/".$d);
-				$json_user=json_decode($f_user);
-			}
-			if (isset($json_user)) {
-				$json=array_merge_recursive($json,$json_user);
+				$f=file_get_contents("../../".project."/conf/".$d);
+				$json=json_decode($f);
+			} else {
+				$f=file_get_contents($d);
+				$json=json_decode($f);
 			}
 			self::$conf->$nm=$json;
 		} }

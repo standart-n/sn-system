@@ -31,10 +31,14 @@ function __construct() {
 						if (isset($ms->charset)) { self::$cn->$alias->charset=$ms->charset; }
 						if ((isset($ms->path)) && (isset($ms->login)) && (isset($ms->password)) && (isset($ms->dbname))) {
 							if (($ms->path!="") && ($ms->login!="") && ($ms->password!="") && ($ms->dbname!="")) {
-								self::$cn->$alias->db=@mysql_pconnect($ms->path,$ms->login,$ms->password);
+								self::$cn->$alias->db=@mysql_pconnect($ms->path,$ms->login,$ms->password);								
 								if (isset(self::$cn->$alias->db)) {
-									mysql_select_db($ms->dbname);
-									mysql_query('SET NAMES UTF8',self::$cn->$alias->db);
+									if (self::$cn->$alias->db) {
+										mysql_select_db($ms->dbname);
+										if (isset($ms->charset)) { if ($ms->charset!="") {
+											mysql_query('SET NAMES '.$ms->charset,self::$cn->$alias->db);
+										} }
+									}
 								}
 							}
 						}
