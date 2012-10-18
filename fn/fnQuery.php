@@ -203,12 +203,8 @@ function execQuery($method,$ms,&$r="") { $a=array();
 			}
 		}
 		if (!isset($clt)) { 
-			if (isset($q->database)) {
-				if (isset($q->database->settings)) {
-					if (isset($q->database->settings->collection_of_data_return)) {
-						$clt=$q->database->settings->collection_of_data_return;
-					}
-				}
+			if (isset(sn::$conf->database->settings->collection_of_data_return)) {
+				$clt=sn::$conf->database->settings->collection_of_data_return;
 			}
 		}
 		if (!isset($clt)) {
