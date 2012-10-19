@@ -265,11 +265,11 @@ function getConnection($ms){ $a=array();
 	if (isset($ms["connection"])) {
 		if ($ms["connection"]!="") { 
 			$ms_cn=$ms["connection"];
-			if (isset(plDataBase::$cn->$fb["cn"])) {
-				if (isset(plDataBase::$cn->$fb["cn"]->db)) {
-					if (isset(plDataBase::$cn->$fb["cn"]->type)) {
+			if (isset(plDataBase::$cn->$ms_cn)) {
+				if (isset(plDataBase::$cn->$ms_cn->db)) {
+					if (isset(plDataBase::$cn->$ms_cn->type)) {
 						
-						if (plDataBase::$cn->$fb["cn"]->type=="firebird") {
+						if (plDataBase::$cn->$ms_cn->type=="firebird") {
 							if (isset($ms["transaction"])) {
 								$ms_it=$ms["transaction"];
 								if (isset(plDataBase::$cn->$fb["cn"]->$ms_it)) {
@@ -283,7 +283,7 @@ function getConnection($ms){ $a=array();
 									if (isset(sn::$conf->database->connections->$ms_cn->transactions)) {
 										foreach (sn::$conf->database->connections->$ms_cn->transactions as $it_alias=>$it_data) {
 											if (!isset($it)) {
-												if (isset(plDataBase::$cn->$fb["cn"]->$it_alias)) {
+												if (isset(plDataBase::$cn->$ms_cn->$it_alias)) {
 													$type="firebird";
 													$connect=$ms_cn;
 													$it=$it_alias;
@@ -296,7 +296,7 @@ function getConnection($ms){ $a=array();
 						}
 
 
-						if (plDataBase::$cn->$fb["cn"]->type=="mysql") {
+						if (plDataBase::$cn->$ms_cn->type=="mysql") {
 							if (isset(sn::$conf->database->connections->$ms_cn)) {
 								$type="mysql";
 								$connect=$ms_cn;
