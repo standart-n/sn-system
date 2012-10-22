@@ -9,10 +9,10 @@ function __construct() {
 		require(system."/external/smarty/Smarty.class.php");
 
 		self::$smarty=new Smarty();
-		self::$smarty->template_dir='tpl/templates/';
-		self::$smarty->compile_dir='tpl/templates_c/';
-		self::$smarty->config_dir='tpl/configs/';
-		self::$smarty->cache_dir='tpl/cache/';
+		self::$smarty->template_dir=project.'/tpl/templates/';
+		self::$smarty->compile_dir=project.'/tpl/templates_c/';
+		self::$smarty->config_dir=project.'/tpl/configs/';
+		self::$smarty->cache_dir=project.'/tpl/cache/';
 
 	}
 }
