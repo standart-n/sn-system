@@ -16,8 +16,8 @@ function load($html) {
 		}
 	}
 	if (preg_match("/\.tpl$/i",$html)) {
-		if (file_exists(project."/templates/".$html)) {
-			$f=@file_get_contents(project."/templates/".$html);
+		if (file_exists(project."/tpl/templates/".$html)) {
+			$f=@file_get_contents(project."/tpl/templates/".$html);
 			if (isset($f)) { if ($f!="") {
 				return plParser::$parser->load($f);
 			} }
@@ -33,8 +33,8 @@ function html() {
 function innerHTML($selector,$html=null) {
 	if ($html){
 		if (preg_match("/\.tpl$/i",$html)) {
-			if (file_exists(project."/templates/".$html)) {
-				$f=@file_get_contents(project."/templates/".$html);
+			if (file_exists(project."/tpl/templates/".$html)) {
+				$f=@file_get_contents(project."/tpl/templates/".$html);
 				if (isset($f)) { if ($f!="") {
 					plParser::$parser->find($selector,0)->innertext=$f;
 					plParser::$parser->load(plParser::$parser->save());

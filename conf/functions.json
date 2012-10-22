@@ -3,5 +3,6 @@
 		"mail":["fnMail"],
 		"query to base":["fnQuery"],
 		"parser":["fnParser"],
+		"smarty":["fnSmarty"],
 		"models":["fnModels"]	
 }

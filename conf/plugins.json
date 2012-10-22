@@ -4,6 +4,7 @@
 		"fn":"plGetFunctions",
 		"bots":"plCheckBots",
 		"parser":"plParser",
+		"smarty":"plSmarty",
 		"zip":"plZip",
 		"project":"plProject"
 }
