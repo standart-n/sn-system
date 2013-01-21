@@ -4,7 +4,7 @@ function __construct() {
 	eval('function query($a,&$r="") { return fnQuery::query($a,$r); }');
 }
 
-function query($a,&$r="") { $ms=array();
+public static function query($a,&$r="") { $ms=array();
 	if (is_array($a)) { $ms=$a; $sql=$a["sql"]; } else { $ms["sql"]=$a; $sql=$a; }
 	switch (strtolower(substr($sql,0,6))) {
 		case "select": return self::execQuery("select",$ms,$r); break;
@@ -15,29 +15,28 @@ function query($a,&$r="") { $ms=array();
 	}
 }
 
-function select($a,&$r="") { $ms=array();
+public static function select($a,&$r="") { $ms=array();
 	if (is_array($a)) { $ms=$a; } else { $ms["sql"]=$a; }
 	return self::execQuery("select",$ms,$r);
 }
 
-function update($a,&$r="") { $ms=array();
+public static function update($a,&$r="") { $ms=array();
 	if (is_array($a)) { $ms=$a; } else { $ms["sql"]=$a; }
 	return self::execQuery("update",$ms);
 }
 
-function insert($a,&$r="") { $ms=array();
+public static function insert($a,&$r="") { $ms=array();
 	if (is_array($a)) { $ms=$a; } else { $ms["sql"]=$a; }
 	return self::execQuery("insert",$ms);
 }
 
-function delete(&$a,&$r="") { $ms=array();
+public static function delete(&$a,&$r="") { $ms=array();
 	if (is_array($a)) { $ms=$a; } else { $ms["sql"]=$a; }
 	return self::execQuery("delete",$ms);
 }
 
 
-
-function fbUpdate($fb,&$r="") { $rt=false;
+public static function fbUpdate($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -47,7 +46,7 @@ function fbUpdate($fb,&$r="") { $rt=false;
 	return $rt;
 }
 
-function fbInsert($fb,&$r="") { $rt=false;
+public static function fbInsert($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -57,7 +56,7 @@ function fbInsert($fb,&$r="") { $rt=false;
 	return $rt;
 }
 
-function fbDelete($fb,&$r="") { $rt=false;
+public static function fbDelete($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -67,7 +66,7 @@ function fbDelete($fb,&$r="") { $rt=false;
 	return $rt;
 }
 
-function fbSelect($fb,&$r="") { $rt=false; $ms=array();
+public static function fbSelect($fb,&$r="") { $rt=false; $ms=array();
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { $rt=true;
 		if ($fb["get"]=="object") {
@@ -107,9 +106,7 @@ function fbSelect($fb,&$r="") { $rt=false; $ms=array();
 
 
 
-
-
-function mysqlUpdate($a,&$r="") { $rt=false;
+public static function mysqlUpdate($a,&$r="") { $rt=false;
 	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -118,7 +115,7 @@ function mysqlUpdate($a,&$r="") { $rt=false;
 	return $rt;
 }
 
-function mysqlInsert($a,&$r="") { $rt=false;
+public static function mysqlInsert($a,&$r="") { $rt=false;
 	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -127,7 +124,7 @@ function mysqlInsert($a,&$r="") { $rt=false;
 	return $rt;
 }
 
-function mysqlDelete($a,&$r="") { $rt=false;
+public static function mysqlDelete($a,&$r="") { $rt=false;
 	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -136,7 +133,7 @@ function mysqlDelete($a,&$r="") { $rt=false;
 	return $rt;
 }
 
-function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
+public static function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
 	$query=@mysql_query($a["sql"],plDataBase::$cn->$a["cn"]->db);
 	if (isset($query)) { if ($query) { $rt=true;
 		if ($a["get"]=="object") {
@@ -173,7 +170,7 @@ function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
 }
 
 
-function execQuery($method,$ms,&$r="") { $a=array();
+public static function execQuery($method,$ms,&$r="") { $a=array();
 	if (in_array($method,array("select","insert","update","delete"))) {		
 		$a=self::getConnection($ms);
 		if (isset($a["type"])) { $type=$a["type"]; }
@@ -261,7 +258,7 @@ function execQuery($method,$ms,&$r="") { $a=array();
 }
 
 
-function getConnection($ms){ $a=array();
+public static function getConnection($ms){ $a=array();
 	if (isset($ms["connection"])) {
 		if ($ms["connection"]!="") { 
 			$ms_cn=$ms["connection"];

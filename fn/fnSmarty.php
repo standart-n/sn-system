@@ -6,15 +6,15 @@ function __construct() {
 	eval('function assign($tag,$value) { return fnSmarty::assign($tag,$value); }');
 }
 
-function display($tpl) {
+public static function display($tpl) {
 	return plSmarty::$smarty->display($tpl);
 }
 
-function fetch($tpl) {
+public static function fetch($tpl) {
 	return plSmarty::$smarty->fetch($tpl);
 }
 
-function assign($tag,$value) {
+public static function assign($tag,$value) {
 	return plSmarty::$smarty->assign($tag,$value);
 }
 

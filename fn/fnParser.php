@@ -6,7 +6,7 @@ function __construct() {
 	eval('function innerHTML($selector,$html=null) { return fnParser::innerHTML($selector,$html); }');
 }
 
-function load($html) {
+public static function load($html) {
 	if ($html=="index.html") {
 		if (file_exists(project."/".$html)) {
 			$f=@file_get_contents(project."/".$html);
@@ -26,11 +26,11 @@ function load($html) {
 	return plParser::$parser->load($html);
 }
 
-function html() {
+public static function html() {
 	return plParser::$parser->save();
 }
 
-function innerHTML($selector,$html=null) {
+public static function innerHTML($selector,$html=null) {
 	if ($html){
 		if (preg_match("/\.tpl$/i",$html)) {
 			if (file_exists(project."/tpl/templates/".$html)) {
