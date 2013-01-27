@@ -5,12 +5,12 @@ function __construct() {
 	eval('function toWIN($s) { return fnValidate::toWIN($s); }');
 }
 
-function toUTF($a) { $s="";
+public static function toUTF($a) { $s="";
 	$s.=iconv("cp1251","UTF-8",$a);
 	return $s;
 }
 
-function toWIN($a) { $s="";
+public static function toWIN($a) { $s="";
 	$s.=iconv("UTF-8","cp1251",$a);
 	return $s;
 }
