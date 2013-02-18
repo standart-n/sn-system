@@ -19,8 +19,8 @@ function configure() { $f_user=""; $json_user="";
 	while ($d=readdir($dir)) { unset($f_user); unset($json_user);
 		if (is_file($d)) { if (preg_match("/[0-9a-z]+\.json/i",$d)) {
 			$nm=str_replace('.json','',$d);
-			if (file_exists("../../".project."/conf/".$d)) {
-				$f=file_get_contents("../../".project."/conf/".$d);
+			if (file_exists(project."/conf/".$d)) {
+				$f=file_get_contents(project."/conf/".$d);
 				$json=json_decode($f);
 			} else {
 				$f=file_get_contents($d);
@@ -29,7 +29,7 @@ function configure() { $f_user=""; $json_user="";
 			self::$conf->$nm=$json;
 		} }
 	}
-	closedir($dir); chdir("../..");
+	closedir($dir); chdir(system);
 }
 
 function plugins() {
