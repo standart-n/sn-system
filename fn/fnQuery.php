@@ -11,7 +11,7 @@ public static function query($a,&$r="") { $ms=array();
 		case "update": return self::execQuery("update",$ms,$r); break;
 		case "insert": return self::execQuery("insert",$ms,$r); break;
 		case "delete": return self::execQuery("delete",$ms,$r); break;
-		default: return false;
+		default: return self::execQuery("select",$ms,$r); break;
 	}
 }
 
