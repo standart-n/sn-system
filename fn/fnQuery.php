@@ -11,7 +11,8 @@ public static function query($a,&$r="") { $ms=array();
 		case "update": return self::execQuery("update",$ms,$r); break;
 		case "insert": return self::execQuery("insert",$ms,$r); break;
 		case "delete": return self::execQuery("delete",$ms,$r); break;
-		default: return self::execQuery("select",$ms,$r); break;
+		case "execut": return self::execQuery("execute",$ms,$r); break;
+		default: return false;
 	}
 }
 
@@ -35,6 +36,10 @@ public static function delete(&$a,&$r="") { $ms=array();
 	return self::execQuery("delete",$ms);
 }
 
+public static function execute(&$a,&$r="") { $ms=array();
+	if (is_array($a)) { $ms=$a; } else { $ms["sql"]=$a; }
+	return self::execQuery("execute",$ms);
+}
 
 public static function fbUpdate($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
@@ -57,6 +62,16 @@ public static function fbInsert($fb,&$r="") { $rt=false;
 }
 
 public static function fbDelete($fb,&$r="") { $rt=false;
+	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
+	if (isset($query)) { if ($query) { 
+		$rt=true;
+		plDataBase::commitIt($fb);
+	} }
+	$r=$rt;
+	return $rt;
+}
+
+public static function fbExecute($fb,&$r="") { $rt=false;
 	$query=@ibase_query(plDataBase::$cn->$fb["cn"]->$fb["it"],$fb["sql"]);
 	if (isset($query)) { if ($query) { 
 		$rt=true;
@@ -171,7 +186,7 @@ public static function mysqlSelect($a,&$r="") { $rt=false; $ms=array();
 
 
 public static function execQuery($method,$ms,&$r="") { $a=array();
-	if (in_array($method,array("select","insert","update","delete"))) {		
+	if (in_array($method,array("select","insert","update","delete","execute"))) {		
 		$a=self::getConnection($ms);
 		if (isset($a["type"])) { $type=$a["type"]; }
 		if (isset($a["cn"])) { $connnect=$a["cn"]; }
@@ -229,7 +244,8 @@ public static function execQuery($method,$ms,&$r="") { $a=array();
 								case "select": $rt=self::fbSelect(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql,"get"=>$get,"clt"=>$clt,"limit"=>$limit),$r); break;
 								case "update": $rt=self::fbUpdate(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
 								case "insert": $rt=self::fbInsert(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
-								case "delete": $rt=self::fbSelect(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
+								case "delete": $rt=self::fbDelete(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
+								case "execute": $rt=self::fbExecute(array("cn"=>$connnect,"it"=>$it,"sql"=>$sql),$r); break;
 							}
 						}
 					}
@@ -244,7 +260,7 @@ public static function execQuery($method,$ms,&$r="") { $a=array();
 							case "select": $rt=self::mysqlSelect(array("cn"=>$connnect,"sql"=>$sql,"get"=>$get,"clt"=>$clt,"limit"=>$limit),$r); break;
 							case "update": $rt=self::mysqlUpdate(array("cn"=>$connnect,"sql"=>$sql),$r); break;
 							case "insert": $rt=self::mysqlInsert(array("cn"=>$connnect,"sql"=>$sql),$r); break;
-							case "delete": $rt=self::mysqlSelect(array("cn"=>$connnect,"sql"=>$sql),$r); break;
+							case "delete": $rt=self::mysqlDelete(array("cn"=>$connnect,"sql"=>$sql),$r); break;
 						}
 					}
 				}
